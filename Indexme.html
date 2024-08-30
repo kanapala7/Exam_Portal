@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Examination</title>
+    <link rel="stylesheet" href="styleslog.css">
+</head>
+<body>
+    <div class="container">
+        <div id="loginForm">
+            <h2>EXAM REGISTRATION</h2>
+            <div class="form-group">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" name="loginUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" name="loginPassword" required>
+            </div>
+            <div class="form-group">
+                <button onclick="login()">Login</button>
+            </div>
+            <p>Don't have an account? <a href="#" onclick="switchForm()">Signup</a></p>
+        </div>
+        <div id="signupForm" style="display: none;">
+            <h2>Signup</h2>
+            <div class="form-group">
+                <label for="signupFullname">Full Name:</label>
+                <input type="text" id="signupFullname" name="signupFullname" required>
+            </div>
+            <div class="form-group">
+                <label for="signupUsername">Username:</label>
+                <input type="text" id="signupUsername" name="signupUsername" required>
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" name="signupPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="signupCollege">College Name:</label>
+                <input type="text" id="signupCollege" name="signupCollege" required>
+            </div>
+            <div class="form-group">
+                <label for="signupSpecialization">Qualification:</label>
+                <input type="text" id="signupSpecialization" name="signupSpecialization" required>
+            </div>
+            <div class="form-group">
+                <label for="signupBranch">Branch:</label>
+                <select id="signupBranch" name="signupBranch" required>
+                    <option value="IT">Information Technology</option>
+                    <option value="CS">Computer Science Engineering</option>
+                    <option value="ECE">Electronics and Communication Engineering</option>
+                    <option value="EEE">Electrical and Electronics Engineering</option>
+                    <option value="civil">Civil Engineering</option>
+                    <option value="Mech">Mechanical Engineering</option>
+                    <option value="CS">Cyber Security</option>
+                    <option value="AIML">Artificial Intillegence and Mechine Learning</option>
+                    <option value="DS">Data Science</option>
+                    <!-- Add more options as needed -->
+                </select>
+                </div>
+            <div class="form-group">
+                <label for="signupDOB">Date of Birth:</label>
+                <input type="date" id="signupDOB" name="signupDOB" required>
+            </div>
+            <div class="form-group">
+                <button onclick="signup()">Signup</button>
+            </div>
+            <p>Already have an account? <a href="#" onclick="switchForm()">Login</a></p>
+        </div>
+        <div id="userCard" style="display: none;">
+            <!-- User data will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        function switchForm() {
+            var loginForm = document.getElementById("loginForm");
+            var signupForm = document.getElementById("signupForm");
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
+                signupForm.style.display = "none";
+            } else {
+                loginForm.style.display = "none";
+                signupForm.style.display = "block";
+            }
+        }
+
+        function login() {
+            var username = document.getElementById("loginUsername").value;
+            var password = document.getElementById("loginPassword").value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "login.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var userData = JSON.parse(xhr.responseText);
+                        displayUser(userData);
+                    } else {
+                        alert("Login failed: " + xhr.responseText);
+                    }
+                }
+            };
+            xhr.send("username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password));
+        }
+
+        function signup() {
+            var fullname = document.getElementById("signupFullname").value;
+            var username = document.getElementById("signupUsername").value;
+            var password = document.getElementById("signupPassword").value;
+            var college = document.getElementById("signupCollege").value;
+            var branch = document.getElementById("signupBranch").value;
+            var specialization = document.getElementById("signupSpecialization").value;
+            var dob = document.getElementById("signupDOB").value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "signup.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        alert("Signup successful!");
+                        switchForm(); // Switch to login form after successful signup
+                    } else {
+                        alert("Signup failed: " + xhr.responseText);
+                    }
+                }
+            };
+            xhr.send("fullname=" + encodeURIComponent(fullname) + "&username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password) + "&college=" + encodeURIComponent(college) + "&branch=" + encodeURIComponent(branch) + "&specialization=" + encodeURIComponent(specialization) + "&dob=" + encodeURIComponent(dob));
+        }
+
+        function displayUser(userData) {
+            var userCard = document.getElementById("userCard");
+            userCard.innerHTML = `
+                <div class="card">
+                    <h3>${userData.fullname}</h3>
+                    <p><strong>Username:</strong> ${userData.username}</p>
+            
+                        <main> 
+		<section class="tiles-container"> 
+			<div class="tile"> 
+				<h2>Tile 1</h2> 
+				<p> 
+					GeeksforGeeks is a leading 
+					platform that provides computer 
+					science resources and coding 
+					challenges for programmers and 
+					technology enthusiasts 
+				</p> 
+			</div> 
+
+			<div class="tile"> 
+				<h2>Tile 2</h2> 
+				<p> 
+					GeeksforGeeks is a leading 
+					platform that provides computer 
+					science resources and coding 
+					challenges for programmers and 
+					technology enthusiasts 
+				</p> 
+			</div> 
+
+			<div class="tile"> 
+				<h2>Tile 3</h2> 
+				<p> 
+					GeeksforGeeks is a leading 
+					platform that provides computer 
+					science resources and coding 
+					challenges for programmers and 
+					technology enthusiasts 
+				</p> 
+			</div> 
+
+			<div class="tile"> 
+				<h2>Tile 4</h2> 
+				<p> 
+					GeeksforGeeks is a leading 
+					platform that provides computer 
+					science resources and coding 
+					challenges for programmers and 
+					technology enthusiasts 
+				</p> 
+			</div> 
+		</section> 
+	</main> 
+                </div>
+            `;
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("userCard").style.display = "block";
+        }
+    </script>
+</body>
+</html>
